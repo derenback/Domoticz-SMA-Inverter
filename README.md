@@ -9,16 +9,17 @@
 - Modbus TCP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
 
 ## Installation
-- Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added.
-
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
 pip3 install -U pymodbus pymodbusTCP
 systemctl restart domoticz
 ```
+- Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added when adding the Hardware in domoticz.
 
-Succesfully Tested on Domoticz version: 2020.2 (build 11997)
+## Tested on
+- Domoticz version: 2020.2 (build 11997)
+- Sunny Tripower 10, STP10.0-3AV-40 601
 
 ## Thanks
 

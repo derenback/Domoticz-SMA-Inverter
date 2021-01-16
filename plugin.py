@@ -50,65 +50,30 @@ def onStart():
 
     Domoticz.Heartbeat(int(Parameters["Mode2"]))
 
-def onHeartbeat():
-    TotalYieldAddress = 30529
-    DCPowerAAddress = 30773
-    DCPowerBAddress = 30961
-    ACPowerAddress = 30775
-    TemperatureAddress = 30953
-    PowerL1 = 30777
-    PowerL2 = 30779
-    PowerL3 = 30781
+def update_device(modbus_id, device_no, divisor=1):
+    value_read = client.read_holding_registers(modbus_id, 2)
+    value = BinaryPayloadDecoder.fromRegisters(value_read, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
 
+    if value == 2147483648:
+        value = 0
+    
+    if divisor == 1:
+        Devices[device_no].Update(0, str(value))
+    else:
+        Devices[device_no].Update(0, str(value / divisor))
+
+
+def onHeartbeat():
     if not client.is_open():
         Domoticz.Log("Not connected. Reconnecting...")
         client.open()
         return
-    
-    TotalYieldRead = client.read_holding_registers(TotalYieldAddress, 2)
-    DCPowerARead = client.read_holding_registers(DCPowerAAddress, 2)
-    DCPowerBRead = client.read_holding_registers(DCPowerBAddress, 2)
-    ACPowerRead = client.read_holding_registers(ACPowerAddress, 2)
-    TemperatureRead = client.read_holding_registers(TemperatureAddress, 2)
-    PowerL1Read = client.read_holding_registers(PowerL1, 2)
-    PowerL2Read = client.read_holding_registers(PowerL2, 2)
-    PowerL3Read = client.read_holding_registers(PowerL3, 2)
 
-    TotalYieldValue = BinaryPayloadDecoder.fromRegisters(TotalYieldRead, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    DCPowerAValue = BinaryPayloadDecoder.fromRegisters(DCPowerARead, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    DCPowerBValue = BinaryPayloadDecoder.fromRegisters(DCPowerBRead, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    ACPowerValue = BinaryPayloadDecoder.fromRegisters(ACPowerRead, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    TemperatureValue = BinaryPayloadDecoder.fromRegisters(TemperatureRead, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    PowerL1Value = BinaryPayloadDecoder.fromRegisters(PowerL1Read, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    PowerL2Value = BinaryPayloadDecoder.fromRegisters(PowerL2Read, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-    PowerL3Value = BinaryPayloadDecoder.fromRegisters(PowerL3Read, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
-
-    if DCPowerAValue == 2147483648:
-        DCPowerAValue = 0
-    
-    if DCPowerBValue == 2147483648:
-        DCPowerBValue = 0
-    
-    if ACPowerValue == 2147483648:
-        ACPowerValue = 0
-
-    if TemperatureValue == 2147483648:
-        TemperatureValue = 0
-
-    if PowerL1Value == 2147483648:
-        PowerL1Value = 0
-    
-    if PowerL2Value == 2147483648:
-        PowerL2Value = 0
-
-    if PowerL3Value == 2147483648:
-        PowerL3Value = 0
-
-    Devices[1].Update(0, str(TotalYieldValue))
-    Devices[2].Update(0, str(DCPowerAValue))
-    Devices[3].Update(0, str(DCPowerBValue))
-    Devices[4].Update(0, str(ACPowerValue))
-    Devices[5].Update(0, str(TemperatureValue / 10))
-    Devices[6].Update(0, str(PowerL1Value))
-    Devices[7].Update(0, str(PowerL2Value))
-    Devices[8].Update(0, str(PowerL3Value))
+    update_device(30529,1)      # Solar Production
+    update_device(30773,2)      # DC Power A
+    update_device(30961,3)      # DC Power B
+    update_device(30775,4)      # AC Power
+    update_device(30953,5,10)   # Temperature
+    update_device(30777,6)      # Power L1
+    update_device(30779,7)      # Power L2
+    update_device(30781,8)      # Power L3
