@@ -15,12 +15,6 @@ Requirements:
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
         <param field="Mode1" label="Device ID" width="40px" required="true" default="3" />
         <param field="Mode2" label="Reading Interval sec." width="40px" required="true" default="5" />
-        <param field="Voltage" label="Phase Voltage" width="75px">
-            <options>
-                <option label="True" value="True" default="true"/>
-                <option label="False" value="False"/>
-            </options>
-        </param>
     </params>
 </plugin>
 """
@@ -49,13 +43,12 @@ def onStart():
         Domoticz.Device(Name="Power L2", Unit=7,TypeName="Usage",Used=0).Create()
     if 8 not in Devices:
         Domoticz.Device(Name="Power L3", Unit=8,TypeName="Usage",Used=0).Create()        
-    if Parameters["Voltage"] == "True":
-        if 9 not in Devices:
-            Domoticz.Device(Name="Voltage L1", Unit=9,TypeName="Voltage",Used=0).Create()
-        if 10 not in Devices:
-            Domoticz.Device(Name="Voltage L2", Unit=10,TypeName="Voltage",Used=0).Create()
-        if 11 not in Devices:
-            Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=0).Create()  
+    if 9 not in Devices:
+        Domoticz.Device(Name="Voltage L1", Unit=9,TypeName="Voltage",Used=0).Create()
+    if 10 not in Devices:
+        Domoticz.Device(Name="Voltage L2", Unit=10,TypeName="Voltage",Used=0).Create()
+    if 11 not in Devices:
+        Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=0).Create()  
 
     global client
     client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
@@ -90,7 +83,6 @@ def onHeartbeat():
     update_device(30777,6)      # Power L1
     update_device(30779,7)      # Power L2
     update_device(30781,8)      # Power L3
-    if Parameters["Voltage"] == "True":
-        update_device(30783,9)      # Voltage L1
-        update_device(30785,10)     # Voltage L2
-        update_device(30787,11)     # Voltage L3
+    update_device(30783,9)      # Voltage L1
+    update_device(30785,10)     # Voltage L2
+    update_device(30787,11)     # Voltage L3
