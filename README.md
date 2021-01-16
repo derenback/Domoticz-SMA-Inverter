@@ -9,6 +9,8 @@
 - Modbus TCP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
 
 ## Installation
+- Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added.
+
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
