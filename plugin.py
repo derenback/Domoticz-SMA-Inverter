@@ -62,6 +62,8 @@ def update_device(modbus_id, device_no, divisor=1):
 
     if value == 2147483648:
         value = 0
+    if value == 4294967295:
+        value = 0
     
     if divisor == 1:
         Devices[device_no].Update(0, str(value))
