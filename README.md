@@ -17,9 +17,23 @@ systemctl restart domoticz
 ```
 - Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added when adding the Hardware in domoticz.
 
+## Update
+```bash
+cd ~/domoticz/plugins/Domoticz-SMA-Inverter
+git pull
+systemctl restart domoticz
+```
+
 ## Tested on
 - Domoticz version: 2020.2 (build 11997)
 - Sunny Tripower 10, STP10.0-3AV-40 601
+
+## Version history
+0.1.0 Initial version
+0.2.0 Reduced code duplication
+0.3.0 Added Phase voltage and power sensors
+0.3.1 Fixed Voltage divisor
+0.3.2 Removed decimals on Voltage reading
 
 ## Thanks
 
