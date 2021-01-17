@@ -40,7 +40,7 @@ def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endi
     valueread = client.read_holding_registers(modbus_id, data_len)
     value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
     if (Parameters["Mode4"] == "Debug"):
-        Domoticz.Log("SMA ID: " + str(modbus_id) + "value: " + str(value))
+        Domoticz.Log("SMA ID: " + str(modbus_id) + " value: " + str(value))
     return value
 
 def onStart():
