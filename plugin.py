@@ -37,7 +37,6 @@ def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endi
 
 def onStart():
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
-    Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(30057)))
 
     if (Parameters["Mode3"] == "On"):
         Domoticz.Log("Extended sensors On")
@@ -71,6 +70,8 @@ def onStart():
     global client
     client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
     client.open()
+
+    Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(30057)))
 
     Domoticz.Heartbeat(int(Parameters["Mode2"]))
 
