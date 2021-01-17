@@ -29,11 +29,12 @@ systemctl restart domoticz
 - Sunny Tripower 10, STP10.0-3AV-40 601
 
 ## Version history
-0.1.0 Initial version
-0.2.0 Reduced code duplication
-0.3.0 Added Phase voltage and power sensors
-0.3.1 Fixed Voltage divisor
-0.3.2 Removed decimals on Voltage reading
+    0.1.0 Initial version
+    0.2.0 Reduced code duplication
+    0.3.0 Added Phase voltage and power sensors
+    0.3.1 Fixed Voltage divisor
+    0.3.2 Removed decimals on Voltage reading
+    0.3.3 Made phase power and voltage optional (Extended sensors)
 
 ## Thanks
 
