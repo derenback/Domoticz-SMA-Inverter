@@ -53,7 +53,7 @@ def onStart():
     
     if (Parameters["Mode4"] == "Debug"):
         Domoticz.Log("Debug is On")
-        Domoticz.Log("Heartbeat time: " + int(Parameters["Mode2"]))
+        Domoticz.Log("Heartbeat time: " + Parameters["Mode2"])
 
     if 1 not in Devices:
         Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=0).Create()
