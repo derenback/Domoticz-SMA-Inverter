@@ -36,6 +36,23 @@ systemctl restart domoticz
     0.3.3 Made phase power and voltage optional (Extended sensors)
     0.3.4 Read serial number on start
 
+## Modbus parameters used
+    
+### Default
+    30529, Solar Production
+    30773, DC Power A
+    30961, DC Power B
+    30775, AC Power
+    30953, Temperature
+
+### Extended
+    30777, Power L1
+    30779, Power L2
+    30781, Power L3
+    30783, Voltage L1
+    30785, Voltage L2
+    30787, Voltage L3
+
 ## Thanks
 
 Original author: Want100Cookies
