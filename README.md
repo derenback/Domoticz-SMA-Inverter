@@ -35,6 +35,7 @@ systemctl restart domoticz
     0.3.2 Removed decimals on voltage reading
     0.3.3 Made phase power and voltage optional (Extended sensors)
     0.3.4 Read serial number on start
+    0.3.5 Added debug information and option
 
 ## Modbus parameters used
     
