@@ -3,7 +3,6 @@
 
 ## Tested on
 - Sunny TriPower [(thanks to Want100Cookies)](https://github.com/Want100Cookies/Domoticz-SMA-Inverter)
-- Sunny Boy 3.6
 
 ## Requirements
 - Modbus TCP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
@@ -31,10 +30,11 @@ systemctl restart domoticz
 ## Version history
     0.1.0 Initial version
     0.2.0 Reduced code duplication
-    0.3.0 Added Phase voltage and power sensors
-    0.3.1 Fixed Voltage divisor
-    0.3.2 Removed decimals on Voltage reading
+    0.3.0 Added phase voltage and power sensors
+    0.3.1 Fixed voltage divisor
+    0.3.2 Removed decimals on voltage reading
     0.3.3 Made phase power and voltage optional (Extended sensors)
+    0.3.4 Read serial number on start
 
 ## Thanks
 

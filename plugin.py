@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.3.3" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.3.4" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -30,8 +30,15 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import Domoticz
 
+def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
+    valueread = client.read_holding_registers(modbus_id, data_len)
+    value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
+    return value
+
 def onStart():
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
+    Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(30057)))
+
     if (Parameters["Mode3"] == "On"):
         Domoticz.Log("Extended sensors On")
     else:
@@ -68,8 +75,7 @@ def onStart():
     Domoticz.Heartbeat(int(Parameters["Mode2"]))
 
 def update_device(modbus_id, device_no, divisor=1, decimals=1):
-    value_read = client.read_holding_registers(modbus_id, 2)
-    value = BinaryPayloadDecoder.fromRegisters(value_read, byteorder=Endian.Big, wordorder=Endian.Big).decode_32bit_uint()
+    value = get_modbus_value(modbus_id)
 
     if value == 2147483648:
         value = 0
