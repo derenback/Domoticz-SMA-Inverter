@@ -68,7 +68,7 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
     if divisor == 1:
         Devices[device_no].Update(0, str(value))
     else:
-        Devices[device_no].Update(0, str(round(value / divisor, decimals))
+        Devices[device_no].Update(0, str(round(value / divisor, decimals)))
 
 
 def onHeartbeat():
