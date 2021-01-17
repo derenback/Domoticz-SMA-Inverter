@@ -5,7 +5,7 @@
 - Sunny TriPower [(thanks to Want100Cookies)](https://github.com/Want100Cookies/Domoticz-SMA-Inverter)
 
 ## Requirements
-- Modbus TCP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
+- Modbus TCP and UDP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
 
 ## Installation
 ```bash
