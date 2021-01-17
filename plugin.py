@@ -77,14 +77,14 @@ def onHeartbeat():
         client.open()
         return
 
-    update_device(30529,1)      # Solar Production
-    update_device(30773,2)      # DC Power A
-    update_device(30961,3)      # DC Power B
-    update_device(30775,4)      # AC Power
-    update_device(30953,5,10)   # Temperature
-    update_device(30777,6)      # Power L1
-    update_device(30779,7)      # Power L2
-    update_device(30781,8)      # Power L3
-    update_device(30783,9)      # Voltage L1
-    update_device(30785,10)     # Voltage L2
-    update_device(30787,11)     # Voltage L3
+    update_device(30529,  1)      # Solar Production
+    update_device(30773,  2)      # DC Power A
+    update_device(30961,  3)      # DC Power B
+    update_device(30775,  4)      # AC Power
+    update_device(30953,  5,  10) # Temperature
+    update_device(30777,  6)      # Power L1
+    update_device(30779,  7)      # Power L2
+    update_device(30781,  8)      # Power L3
+    update_device(30783,  9, 100) # Voltage L1
+    update_device(30785, 10, 100) # Voltage L2
+    update_device(30787, 11, 100) # Voltage L3
