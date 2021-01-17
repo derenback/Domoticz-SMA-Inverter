@@ -39,20 +39,19 @@ systemctl restart domoticz
 
 ## Modbus parameters used
     
-### Default
-    30529, Solar Production
-    30773, DC Power A
-    30961, DC Power B
-    30775, AC Power
-    30953, Temperature
-
-### Extended
-    30777, Power L1
-    30779, Power L2
-    30781, Power L3
-    30783, Voltage L1
-    30785, Voltage L2
-    30787, Voltage L3
+| Address | Name              | Unit | Ext |
+|---------|-------------------|------|-----|
+|  30529  | Solar Production  | kWh  |     |
+|  30773  | DC Power A        |  W   |     | 
+|  30961  | DC Power B        |  W   |     | 
+|  30775  | AC Power          |  W   |     | 
+|  30953  | Temperature       |  C   |     | 
+|  30777  | Power L1          |  W   |  X  | 
+|  30779  | Power L2          |  W   |  X  | 
+|  30781  | Power L3          |  W   |  X  | 
+|  30783  | Voltage L1        |  V   |  X  | 
+|  30785  | Voltage L2        |  V   |  X  | 
+|  30787  | Voltage L3        |  V   |  X  | 
 
 ## Thanks
 
