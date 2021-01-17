@@ -21,6 +21,12 @@ Requirements:
                 <option label="Off" value="Off"/>
             </options>
         </param>
+        <param field="Mode4" label="Debug" width="75px">
+            <options>
+                <option label="On" value="Debug"/>
+                <option label="Off" value="Off" default="true" />
+            </options>
+        </param>
     </params>
 </plugin>
 """
@@ -33,6 +39,8 @@ import Domoticz
 def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
     valueread = client.read_holding_registers(modbus_id, data_len)
     value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
+    if (Parameters["Mode4"] == "Debug"):
+        Domoticz.Log("SMA ID: " + str(modbus_id) + "value: " + str(value))
     return value
 
 def onStart():
@@ -42,6 +50,10 @@ def onStart():
         Domoticz.Log("Extended sensors On")
     else:
         Domoticz.Log("Extended sensors Off")
+    
+    if (Parameters["Mode4"] == "Debug"):
+        Domoticz.Log("Debug is On")
+        Domoticz.Log("Heartbeat time: " + int(Parameters["Mode2"]))
 
     if 1 not in Devices:
         Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=0).Create()
@@ -67,9 +79,12 @@ def onStart():
         if 11 not in Devices:
             Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=0).Create()  
 
-    global client
-    client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
-    client.open()
+    try:
+        global client
+        client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
+        client.open()
+    except:
+        Domoticz.Log("SMA Inverter connection problem");
 
     Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(30057)))
 
@@ -91,9 +106,12 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
 
 def onHeartbeat():
     if not client.is_open():
-        Domoticz.Log("Not connected. Reconnecting...")
-        client.open()
-        return
+        Domoticz.Log("SMA inverter not connected. Reconnecting...")
+        try:
+            client.open()
+        except:
+            Domoticz.Log("SMA Inverter connection problem");
+            return
 
     update_device(30529,  1)         # Solar Production
     update_device(30773,  2)         # DC Power A
