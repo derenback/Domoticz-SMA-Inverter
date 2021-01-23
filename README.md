@@ -24,23 +24,24 @@ sudo systemctl restart domoticz
 - Domoticz version: 2020.2 (build 11997)
 - Sunny Tripower 10, STP10.0-3AV-40 601
 
-## Modbus parameters used
+## Modbus parameters used and sensor types
     
-| Address | Name              | Unit | Ext |
-|---------|-------------------|------|-----|
-|  30529  | Solar Production  | kWh  |     |
-|  30773  | DC Power A        |  W   |     | 
-|  30961  | DC Power B        |  W   |     | 
-|  30775  | AC Power          |  W   |     | 
-|  30953  | Temperature       |  C   |     | 
-|  30777  | Power L1          |  W   |  X  | 
-|  30779  | Power L2          |  W   |  X  | 
-|  30781  | Power L3          |  W   |  X  | 
-|  30783  | Voltage L1        |  V   |  X  | 
-|  30785  | Voltage L2        |  V   |  X  | 
-|  30787  | Voltage L3        |  V   |  X  | 
+| Address | Name              | Unit | Ext | Sensor Type | Note                     |
+|---------|-------------------|------|-----|-------------|--------------------------|
+|  30529  | Solar Production  | kWh  |     | Counter     |                          |
+|  30773  | DC Power A        |  W   |     | Usage       |                          |
+|  30961  | DC Power B        |  W   |     | Usage       |                          |
+|  30775  | AC Power          |  W   |     | kWh         | + 30535 for daily prod   |
+|  30953  | Temperature       |  C   |     | Temperatur  |                          |
+|  30777  | Power L1          |  W   |  X  | Usage       |                          |
+|  30779  | Power L2          |  W   |  X  | Usage       |                          |
+|  30781  | Power L3          |  W   |  X  | Usage       |                          |
+|  30783  | Voltage L1        |  V   |  X  | Voltage     |                          |
+|  30785  | Voltage L2        |  V   |  X  | Voltage     |                          |
+|  30787  | Voltage L3        |  V   |  X  | Voltage     |                          |
 
 ## Version history
+    0.4.0 Changed AC Power to be sensor type kWh to also show daily production
     0.3.5 Added debug information and option
     0.3.4 Read serial number on start
     0.3.3 Made phase power and voltage optional (Extended sensors)

@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.3.5" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.4.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -56,28 +56,28 @@ def onStart():
         Domoticz.Log("Heartbeat time: " + Parameters["Mode2"])
 
     if 1 not in Devices:
-        Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=0).Create()
+        Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=1).Create()
     if 2 not in Devices:
-        Domoticz.Device(Name="DC Power A", Unit=2, TypeName="Usage", Used=0).Create()
+        Domoticz.Device(Name="DC Power A", Unit=2, TypeName="Usage", Used=1).Create()
     if 3 not in Devices:
-        Domoticz.Device(Name="DC Power B", Unit=3, TypeName="Usage", Used=0).Create()
+        Domoticz.Device(Name="DC Power B", Unit=3, TypeName="Usage", Used=1).Create()
     if 4 not in Devices:
-        Domoticz.Device(Name="AC Power", Unit=4, TypeName="Usage", Used=0).Create()
+        Domoticz.Device(Name="AC Power", Unit=4, TypeName="kWh", Used=1).Create()
     if 5 not in Devices:
-        Domoticz.Device(Name="Temperature", Unit=5, TypeName="Temperature", Used=0).Create()
+        Domoticz.Device(Name="Temperature", Unit=5, TypeName="Temperature", Used=1).Create()
     if (Parameters["Mode3"] == "On"):
         if 6 not in Devices:
-            Domoticz.Device(Name="Power L1", Unit=6,TypeName="Usage",Used=0).Create()
+            Domoticz.Device(Name="Power L1", Unit=6,TypeName="Usage",Used=1).Create()
         if 7 not in Devices:
-            Domoticz.Device(Name="Power L2", Unit=7,TypeName="Usage",Used=0).Create()
+            Domoticz.Device(Name="Power L2", Unit=7,TypeName="Usage",Used=1).Create()
         if 8 not in Devices:
-            Domoticz.Device(Name="Power L3", Unit=8,TypeName="Usage",Used=0).Create()        
+            Domoticz.Device(Name="Power L3", Unit=8,TypeName="Usage",Used=1).Create()        
         if 9 not in Devices:
-            Domoticz.Device(Name="Voltage L1", Unit=9,TypeName="Voltage",Used=0).Create()
+            Domoticz.Device(Name="Voltage L1", Unit=9,TypeName="Voltage",Used=1).Create()
         if 10 not in Devices:
-            Domoticz.Device(Name="Voltage L2", Unit=10,TypeName="Voltage",Used=0).Create()
+            Domoticz.Device(Name="Voltage L2", Unit=10,TypeName="Voltage",Used=1).Create()
         if 11 not in Devices:
-            Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=0).Create()  
+            Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=1).Create()  
 
     try:
         global client
@@ -92,6 +92,8 @@ def onStart():
 
 def update_device(modbus_id, device_no, divisor=1, decimals=1):
     value = get_modbus_value(modbus_id)
+    if modbus_id == 30775:
+        prod_today = get_modbus_value(30535)
 
     if value == 2147483648:
         value = 0
@@ -99,7 +101,12 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
         value = 0
     
     if divisor == 1:
-        Devices[device_no].Update(0, str(value))
+        if modbus_id == 30775:
+            if (Parameters["Mode4"] == "Debug"):
+                Domoticz.Log("AC Power: " + str(value) + " Today: " + str(prod_today))
+            Devices[device_no].Update(0, str(value) + ";" + str(prod_today))
+        else:
+            Devices[device_no].Update(0, str(value))
     else:
         Devices[device_no].Update(0, str(round(value / divisor, decimals)))
 
