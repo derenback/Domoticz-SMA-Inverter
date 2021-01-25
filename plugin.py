@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.4.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.5.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -55,8 +55,6 @@ def onStart():
         Domoticz.Log("Debug is On")
         Domoticz.Log("Heartbeat time: " + Parameters["Mode2"])
 
-    if 1 not in Devices:
-        Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=1).Create()
     if 2 not in Devices:
         Domoticz.Device(Name="DC Power A", Unit=2, TypeName="Usage", Used=1).Create()
     if 3 not in Devices:
@@ -93,7 +91,7 @@ def onStart():
 def update_device(modbus_id, device_no, divisor=1, decimals=1):
     value = get_modbus_value(modbus_id)
     if modbus_id == 30775:
-        prod_today = get_modbus_value(30535)
+        total_solar_production = get_modbus_value(30529) # Total solar production
 
     if value == 2147483648:
         value = 0
@@ -103,8 +101,8 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
     if divisor == 1:
         if modbus_id == 30775:
             if (Parameters["Mode4"] == "Debug"):
-                Domoticz.Log("AC Power: " + str(value) + " Today: " + str(prod_today))
-            Devices[device_no].Update(0, str(value) + ";" + str(prod_today))
+                Domoticz.Log("AC Power: " + str(value) + " Total solar production: " + str(total_solar_production))
+            Devices[device_no].Update(0, str(value) + ";" + str(total_solar_production))
         else:
             Devices[device_no].Update(0, str(value))
     else:
@@ -120,10 +118,9 @@ def onHeartbeat():
             Domoticz.Log("SMA Inverter connection problem");
             return
 
-    update_device(30529,  1)         # Solar Production
     update_device(30773,  2)         # DC Power A
     update_device(30961,  3)         # DC Power B
-    update_device(30775,  4)         # AC Power
+    update_device(30775,  4)         # AC Power + Solar production
     update_device(30953,  5,  10)    # Temperature
     # Extended sensors
     if (Parameters["Mode3"] == "On"):

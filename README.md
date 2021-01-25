@@ -26,21 +26,21 @@ sudo systemctl restart domoticz
 
 ## Modbus parameters used and sensor types
     
-| Address | Name              | Unit | Ext | Sensor Type | Note                     |
-|---------|-------------------|------|-----|-------------|--------------------------|
-|  30529  | Solar Production  | kWh  |     | Counter     |                          |
-|  30773  | DC Power A        |  W   |     | Usage       |                          |
-|  30961  | DC Power B        |  W   |     | Usage       |                          |
-|  30775  | AC Power          |  W   |     | kWh         | + 30535 for daily prod   |
-|  30953  | Temperature       |  C   |     | Temperatur  |                          |
-|  30777  | Power L1          |  W   |  X  | Usage       |                          |
-|  30779  | Power L2          |  W   |  X  | Usage       |                          |
-|  30781  | Power L3          |  W   |  X  | Usage       |                          |
-|  30783  | Voltage L1        |  V   |  X  | Voltage     |                          |
-|  30785  | Voltage L2        |  V   |  X  | Voltage     |                          |
-|  30787  | Voltage L3        |  V   |  X  | Voltage     |                          |
+| Address | Name              | Unit | Ext | Sensor Type | Note                             |
+|---------|-------------------|------|-----|-------------|----------------------------------|
+|  30773  | DC Power A        |  W   |     | Usage       |                                  |
+|  30961  | DC Power B        |  W   |     | Usage       |                                  |
+|  30775  | AC Power          |  W   |     | kWh         | + 30529 for daily and total prod |
+|  30953  | Temperature       |  C   |     | Temperatur  |                                  |
+|  30777  | Power L1          |  W   |  X  | Usage       |                                  |
+|  30779  | Power L2          |  W   |  X  | Usage       |                                  |
+|  30781  | Power L3          |  W   |  X  | Usage       |                                  |
+|  30783  | Voltage L1        |  V   |  X  | Voltage     |                                  |
+|  30785  | Voltage L2        |  V   |  X  | Voltage     |                                  |
+|  30787  | Voltage L3        |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.5.0 AC power daily production based on total production + Removed device for Solar production. (Now included in AC power)
     0.4.0 Changed AC Power to be sensor type kWh to also show daily production
     0.3.5 Added debug information and option
     0.3.4 Read serial number on start
