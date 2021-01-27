@@ -40,7 +40,9 @@ sudo systemctl restart domoticz
 |  30787  | Voltage L3        |  V   |  X  | Voltage     |                                  |
 
 ## Version history
-    0.5.0 AC power daily production based on total production + Removed device for Solar production. (Now included in AC power)
+    0.5.1 Fix for undefined value of total production
+    0.5.0 AC power daily production based on total production + Removed device for Solar production. 
+          (Now included in AC power)
     0.4.0 Changed AC Power to be sensor type kWh to also show daily production
     0.3.5 Added debug information and option
     0.3.4 Read serial number on start

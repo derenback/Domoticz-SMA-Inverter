@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.5.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.5.1" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -96,7 +96,9 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
     if value == 2147483648:
         value = 0
     if value == 4294967295:
-        value = 0
+        value = 0    
+    if value2 == 4294967295:
+        value2 = 0
     
     if divisor == 1:
         if modbus_id == 30775:
