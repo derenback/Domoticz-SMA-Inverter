@@ -92,13 +92,13 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
     value = get_modbus_value(modbus_id)
     if modbus_id == 30775:
         total_solar_production = get_modbus_value(30529) # Total solar production
+        if total_solar_production == 4294967295:
+            total_solar_production = 0
 
     if value == 2147483648:
         value = 0
     if value == 4294967295:
         value = 0    
-    if total_solar_production == 4294967295:
-        total_solar_production = 0
     
     if divisor == 1:
         if modbus_id == 30775:
