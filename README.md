@@ -28,6 +28,7 @@ sudo systemctl restart domoticz
     
 | Address | Name              | Unit | Ext | Sensor Type | Note                             |
 |---------|-------------------|------|-----|-------------|----------------------------------|
+|  30529  | Solar production  | kWh  |     | Counter     |                                  | 
 |  30773  | DC Power A        |  W   |     | Usage       |                                  |
 |  30961  | DC Power B        |  W   |     | Usage       |                                  |
 |  30775  | AC Power          |  W   |     | kWh         | + 30529 for daily and total prod |
@@ -40,6 +41,7 @@ sudo systemctl restart domoticz
 |  30787  | Voltage L3        |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.6.0 Reverted removal of total production and restore total production on restart or no data.
     0.5.1 Fix for undefined value of total production
     0.5.0 AC power daily production based on total production + Removed device for Solar production. 
           (Now included in AC power)

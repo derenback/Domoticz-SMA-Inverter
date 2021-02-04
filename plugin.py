@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.5.1" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.6.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -36,6 +36,8 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import Domoticz
 
+last_saved_total_prod = 0
+
 def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
     valueread = client.read_holding_registers(modbus_id, data_len)
     value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
@@ -44,6 +46,7 @@ def get_modbus_value(modbus_id, data_len=2, byteorder=Endian.Big, wordorder=Endi
     return value
 
 def onStart():
+    global last_saved_total_prod
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
 
     if (Parameters["Mode3"] == "On"):
@@ -52,15 +55,22 @@ def onStart():
         Domoticz.Log("Extended sensors Off")
     
     if (Parameters["Mode4"] == "Debug"):
-        Domoticz.Log("Debug is On")
-        Domoticz.Log("Heartbeat time: " + Parameters["Mode2"])
+        Domoticz.Log("SMA Debug is On")
+        Domoticz.Log("SMA Heartbeat time: " + Parameters["Mode2"])
 
+    if 1 not in Devices:
+        Domoticz.Device(Name="Solar Production", Unit=1,Type=0x71,Subtype=0x0,Used=1).Create()
     if 2 not in Devices:
         Domoticz.Device(Name="DC Power A", Unit=2, TypeName="Usage", Used=1).Create()
     if 3 not in Devices:
         Domoticz.Device(Name="DC Power B", Unit=3, TypeName="Usage", Used=1).Create()
     if 4 not in Devices:
         Domoticz.Device(Name="AC Power", Unit=4, TypeName="kWh", Used=1).Create()
+    else:
+        temp_str = Devices[4].sValue.split(";")
+        last_saved_total_prod = int(temp_str[1])
+        if (Parameters["Mode4"] == "Debug"):
+            Domoticz.Log("SMA restored total production on restart " + str(last_saved_total_prod)) 
     if 5 not in Devices:
         Domoticz.Device(Name="Temperature", Unit=5, TypeName="Temperature", Used=1).Create()
     if (Parameters["Mode3"] == "On"):
@@ -89,11 +99,13 @@ def onStart():
     Domoticz.Heartbeat(int(Parameters["Mode2"]))
 
 def update_device(modbus_id, device_no, divisor=1, decimals=1):
+    global last_saved_total_prod
     value = get_modbus_value(modbus_id)
     if modbus_id == 30775:
-        total_solar_production = get_modbus_value(30529) # Total solar production
-        if total_solar_production == 4294967295:
-            total_solar_production = 0
+        total_prod = get_modbus_value(30529) # Solar production total
+        if total_prod == 4294967295:
+            total_prod = last_saved_total_prod
+        last_saved_total_prod = total_prod
 
     if value == 2147483648:
         value = 0
@@ -103,8 +115,8 @@ def update_device(modbus_id, device_no, divisor=1, decimals=1):
     if divisor == 1:
         if modbus_id == 30775:
             if (Parameters["Mode4"] == "Debug"):
-                Domoticz.Log("AC Power: " + str(value) + " Total solar production: " + str(total_solar_production))
-            Devices[device_no].Update(0, str(value) + ";" + str(total_solar_production))
+                Domoticz.Log("SMA AC Power: " + str(value) + " Total solar production: " + str(total_prod))
+            Devices[device_no].Update(0, str(value) + ";" + str(total_prod))
         else:
             Devices[device_no].Update(0, str(value))
     else:
@@ -120,6 +132,7 @@ def onHeartbeat():
             Domoticz.Log("SMA Inverter connection problem");
             return
 
+    update_device(30529,  1)         # Solar Production
     update_device(30773,  2)         # DC Power A
     update_device(30961,  3)         # DC Power B
     update_device(30775,  4)         # AC Power + Solar production
