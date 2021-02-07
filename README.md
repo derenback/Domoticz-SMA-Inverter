@@ -39,8 +39,10 @@ sudo systemctl restart domoticz
 |  30783  | Voltage L1        |  V   |  X  | Voltage     |                                  |
 |  30785  | Voltage L2        |  V   |  X  | Voltage     |                                  |
 |  30787  | Voltage L3        |  V   |  X  | Voltage     |                                  |
+|  30803  | Grid frequency    |  Hz  |  X  | Custom      |                                  |
 
 ## Version history
+    0.7.0 Added grid frquency
     0.6.0 Reverted removal of total production and restore total production on restart or no data.
     0.5.1 Fix for undefined value of total production
     0.5.0 AC power daily production based on total production + Removed device for Solar production. 

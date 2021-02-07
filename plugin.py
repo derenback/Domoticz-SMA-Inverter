@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.6.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.7.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -86,6 +86,8 @@ def onStart():
             Domoticz.Device(Name="Voltage L2", Unit=10,TypeName="Voltage",Used=1).Create()
         if 11 not in Devices:
             Domoticz.Device(Name="Voltage L3", Unit=11,TypeName="Voltage",Used=1).Create()  
+        if 12 not in Devices:
+            Domoticz.Device(Name="Grid frequency", Unit=12,Type=243,Subtype=31,Options={'Custom': '1;Hz'},Used=1).Create() 
 
     try:
         global client
@@ -145,3 +147,4 @@ def onHeartbeat():
         update_device(30783,  9, 100, 0) # Voltage L1
         update_device(30785, 10, 100, 0) # Voltage L2
         update_device(30787, 11, 100, 0) # Voltage L3
+        update_device(30803, 12, 100, 2) # Grid frequency
