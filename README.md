@@ -42,6 +42,7 @@ sudo systemctl restart domoticz
 |  30803  | Grid frequency    |  Hz  |  X  | Custom      |                                  |
 
 ## Version history
+    0.7.1 Skip update if a device has been removed
     0.7.0 Added grid frquency
     0.6.0 Reverted removal of total production and restore total production on restart or no data.
     0.5.1 Fix for undefined value of total production

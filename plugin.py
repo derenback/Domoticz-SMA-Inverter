@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.7.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.7.1" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -94,7 +94,7 @@ def onStart():
         client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
         client.open()
     except:
-        Domoticz.Log("SMA Inverter connection problem");
+        Domoticz.Log("SMA Inverter connection problem")
 
     Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(30057)))
 
@@ -102,27 +102,28 @@ def onStart():
 
 def update_device(modbus_id, device_no, divisor=1, decimals=1):
     global last_saved_total_prod
-    value = get_modbus_value(modbus_id)
-    if modbus_id == 30775:
-        total_prod = get_modbus_value(30529) # Solar production total
-        if total_prod == 4294967295:
-            total_prod = last_saved_total_prod
-        last_saved_total_prod = total_prod
-
-    if value == 2147483648:
-        value = 0
-    if value == 4294967295:
-        value = 0    
-    
-    if divisor == 1:
+    if device_no in Devices:
+        value = get_modbus_value(modbus_id)
         if modbus_id == 30775:
-            if (Parameters["Mode4"] == "Debug"):
-                Domoticz.Log("SMA AC Power: " + str(value) + " Total solar production: " + str(total_prod))
-            Devices[device_no].Update(0, str(value) + ";" + str(total_prod))
+            total_prod = get_modbus_value(30529) # Solar production total
+            if total_prod == 4294967295:
+                total_prod = last_saved_total_prod
+            last_saved_total_prod = total_prod
+
+        if value == 2147483648:
+            value = 0
+        if value == 4294967295:
+            value = 0    
+        
+        if divisor == 1:
+            if modbus_id == 30775:
+                if (Parameters["Mode4"] == "Debug"):
+                    Domoticz.Log("SMA AC Power: " + str(value) + " Total solar production: " + str(total_prod))
+                Devices[device_no].Update(0, str(value) + ";" + str(total_prod))
+            else:
+                Devices[device_no].Update(0, str(value))
         else:
-            Devices[device_no].Update(0, str(value))
-    else:
-        Devices[device_no].Update(0, str(round(value / divisor, decimals)))
+            Devices[device_no].Update(0, str(round(value / divisor, decimals)))
 
 
 def onHeartbeat():
