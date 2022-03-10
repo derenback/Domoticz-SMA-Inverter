@@ -46,8 +46,13 @@ sudo systemctl restart domoticz
 |  30813  | Apparent power L1 |  VA  |  X  | Custom      |                                  |
 |  30815  | Apparent power L2 |  VA  |  X  | Custom      |                                  |
 |  30817  | Apparent power L3 |  VA  |  X  | Custom      |                                  |
+|  30769  | Current String A  |  A   |  X  | Ampere      |                                  |
+|  30957  | Current String B  |  A   |  X  | Ampere      |                                  |
+|  30771  | Voltage String A  |  V   |  X  | Voltage     |                                  |
+|  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.9.1 Added String Current and Voltage sensors
     0.9.0 Refactor and cleanup
     0.8.0 Added Reactive and apparent power sensors
     0.7.4 Fix for decimal value stored for total production
