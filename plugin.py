@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.1" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.2" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -37,20 +37,20 @@ from pymodbus.payload import BinaryPayloadDecoder
 import Domoticz
 
 class device_info:
-  def __init__(self, address, unit, divisor, decimals, NaN, name, type, option = ""):
+  def __init__(self, address, unit, divisor, decimals, nan, name, type, option = ""):
     self.address = address
     self.unit = unit
     self.divisor = divisor
     self.decimals = decimals
-    self.NaN = NaN
+    self.nan = nan
     self.name = name
     self.type = type
     self.option = option
 
 SERIAL_NUMBER_ADDRESS = 30057
 
-U32_NAN = 0xFFFFFFFF
-S32_NAN = 0x80000000
+U32 = 0xFFFFFFFF
+S32 = 0x80000000
 
 devs = []
 last_saved_total_prod = 0
@@ -67,29 +67,29 @@ def onStart():
     global last_saved_total_prod
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
 
-    devs.append(    device_info(30529,  1,    1, 1, U32_NAN,  "Solar Production",          0x71)) 
-    devs.append(    device_info(30773,  2,    1, 1, S32_NAN,        "DC Power A",       "Usage"))
-    devs.append(    device_info(30961,  3,    1, 1, S32_NAN,        "DC Power B",       "Usage"))
-    devs.append(    device_info(30775,  4,    1, 1, S32_NAN,          "AC Power",         "kWh"))
-    devs.append(    device_info(30953,  5,   10, 1, S32_NAN,       "Temperature", "Temperature"))
+    devs.append(    device_info(30529,  1,    1, 1, U32,  "Solar Production",          0x71)) 
+    devs.append(    device_info(30773,  2,    1, 1, S32,        "DC Power A",       "Usage"))
+    devs.append(    device_info(30961,  3,    1, 1, S32,        "DC Power B",       "Usage"))
+    devs.append(    device_info(30775,  4,    1, 1, S32,          "AC Power",         "kWh"))
+    devs.append(    device_info(30953,  5,   10, 1, S32,       "Temperature", "Temperature"))
     if (Parameters["Mode3"] == "On"):
-        devs.append(device_info(30777,  6,    1, 1, S32_NAN,          "Power L1",       "Usage"))
-        devs.append(device_info(30779,  7,    1, 1, S32_NAN,          "Power L2",       "Usage"))
-        devs.append(device_info(30781,  8,    1, 1, S32_NAN,          "Power L3",       "Usage"))
-        devs.append(device_info(30783,  9,  100, 0, U32_NAN,        "Voltage L1",     "Voltage"))
-        devs.append(device_info(30785, 10,  100, 0, U32_NAN,        "Voltage L2",     "Voltage"))
-        devs.append(device_info(30787, 11,  100, 0, U32_NAN,        "Voltage L3",     "Voltage"))
-        devs.append(device_info(30803, 12,  100, 2, U32_NAN,    "Grid frequency",      "Custom", {'Custom': '1;Hz'}))
-        devs.append(device_info(30807, 13,    1, 0, S32_NAN, "Reactive power L1",      "Custom", {'Custom': '1;VAr'}))
-        devs.append(device_info(30809, 14,    1, 0, S32_NAN, "Reactive power L2",      "Custom", {'Custom': '1;VAr'}))
-        devs.append(device_info(30811, 15,    1, 0, S32_NAN, "Reactive power L3",      "Custom", {'Custom': '1;VAr'}))
-        devs.append(device_info(30815, 16,    1, 0, S32_NAN, "Apparent power L1",      "Custom", {'Custom': '1;VA'}))
-        devs.append(device_info(30817, 17,    1, 0, S32_NAN, "Apparent power L2",      "Custom", {'Custom': '1;VA'}))
-        devs.append(device_info(30819, 18,    1, 0, S32_NAN, "Apparent power L3",      "Custom", {'Custom': '1;VA'}))
-        devs.append(device_info(30769, 19, 1000, 3, S32_NAN,  "Current String A",      "Ampere"))
-        devs.append(device_info(30957, 20, 1000, 3, S32_NAN,  "Current String B",      "Ampere"))
-        devs.append(device_info(30771, 21,  100, 0, S32_NAN,  "Voltage String A",     "Voltage"))
-        devs.append(device_info(30959, 22,  100, 0, S32_NAN,  "Voltage String B",     "Voltage"))
+        devs.append(device_info(30777,  6,    1, 1, S32,          "Power L1",       "Usage"))
+        devs.append(device_info(30779,  7,    1, 1, S32,          "Power L2",       "Usage"))
+        devs.append(device_info(30781,  8,    1, 1, S32,          "Power L3",       "Usage"))
+        devs.append(device_info(30783,  9,  100, 0, U32,        "Voltage L1",     "Voltage"))
+        devs.append(device_info(30785, 10,  100, 0, U32,        "Voltage L2",     "Voltage"))
+        devs.append(device_info(30787, 11,  100, 0, U32,        "Voltage L3",     "Voltage"))
+        devs.append(device_info(30803, 12,  100, 2, U32,    "Grid frequency",      "Custom", {'Custom': '1;Hz'}))
+        devs.append(device_info(30807, 13,    1, 0, S32, "Reactive power L1",      "Custom", {'Custom': '1;VAr'}))
+        devs.append(device_info(30809, 14,    1, 0, S32, "Reactive power L2",      "Custom", {'Custom': '1;VAr'}))
+        devs.append(device_info(30811, 15,    1, 0, S32, "Reactive power L3",      "Custom", {'Custom': '1;VAr'}))
+        devs.append(device_info(30815, 16,    1, 0, S32, "Apparent power L1",      "Custom", {'Custom': '1;VA'}))
+        devs.append(device_info(30817, 17,    1, 0, S32, "Apparent power L2",      "Custom", {'Custom': '1;VA'}))
+        devs.append(device_info(30819, 18,    1, 0, S32, "Apparent power L3",      "Custom", {'Custom': '1;VA'}))
+        devs.append(device_info(30769, 19, 1000, 3, S32,  "Current String A",      "Ampere"))
+        devs.append(device_info(30957, 20, 1000, 3, S32,  "Current String B",      "Ampere"))
+        devs.append(device_info(30771, 21,  100, 0, S32,  "Voltage String A",     "Voltage"))
+        devs.append(device_info(30959, 22,  100, 0, S32,  "Voltage String B",     "Voltage"))
 
     if (Parameters["Mode3"] == "On"):
         Domoticz.Log("Extended sensors On")
@@ -134,13 +134,18 @@ def update_device(dev):
         value = get_modbus_value(dev.address)
 
         if dev.unit == 1:
-            if value == dev.NaN:
+            if value == dev.nan:
                 value = last_saved_total_prod
             else:
                 last_saved_total_prod = value
         else:
-            if value == dev.NaN:
+            if value == dev.nan:
                 value = 0
+        
+        # Handle negative numbers
+        if dev.nan == S32:
+            if value > S32:
+                value = value - U32
         
         if dev.divisor == 1:
             if dev.unit == 4:
