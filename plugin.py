@@ -142,11 +142,6 @@ def update_device(dev):
             if value == dev.nan:
                 value = 0
         
-        # Handle negative numbers
-        if dev.nan == S32:
-            if value > S32:
-                value = value - U32
-        
         if dev.divisor == 1:
             if dev.unit == 4:
                 if (Parameters["Mode4"] == "Debug"):
