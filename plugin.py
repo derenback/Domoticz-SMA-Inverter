@@ -145,7 +145,7 @@ def update_device(dev):
         # Handle negative numbers
         if dev.nan == S32:
             if value > S32:
-                value = value - U32
+                value = value - (U32 + 1)
         
         if dev.divisor == 1:
             if dev.unit == 4:
