@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.2" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.3" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -119,7 +119,7 @@ def onStart():
 
     try:
         global client
-        client = ModbusClient(host=Parameters["Address"], port=Parameters["Port"], unit_id=Parameters["Mode1"])
+        client = ModbusClient(host=Parameters["Address"], port = int(Parameters["Port"]), unit_id=int(Parameters["Mode1"]))
         client.open()
     except:
         Domoticz.Log("SMA Inverter connection problem")
@@ -159,7 +159,7 @@ def update_device(dev):
 
 
 def onHeartbeat():
-    if not client.is_open():
+    if not client.is_open:
         Domoticz.Log("SMA inverter not connected. Reconnecting...")
         try:
             client.open()
