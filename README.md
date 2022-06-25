@@ -52,6 +52,7 @@ sudo systemctl restart domoticz
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.9.3 Fix check if client is open and make sure port and unit number are integers
     0.9.2 Fix Handle negative numbers
     0.9.1 Added String Current and Voltage sensors
     0.9.0 Refactor and cleanup
