@@ -24,6 +24,9 @@ sudo systemctl restart domoticz
 Docker example files added in the folder docker. 
 Note that you might have to modify these files to fit your system.
 
+## Test file
+In the folder test you will find a simple stand alone test script.
+
 ## Tested on
 - Domoticz versions: 2020.2, 2021.1, 2022.1
 - Sunny Tripower 10, STP10.0-3AV-40 601
