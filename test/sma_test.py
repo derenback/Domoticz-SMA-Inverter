@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
+from ipaddress import ip_address
 from pyModbusTCP.client import ModbusClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("ip_address", help="Usage: sma_test.py <IP_ADDRESS>")
+parser = argparse.ArgumentParser(description="Test the connection to your SMA inverter.")
+parser.add_argument("ip_address", nargs="?", type=ip_address, default="192.168.0.125", help="Default: 192.168.0.125")
+parser.add_argument("port", nargs="?", type=int, default=502, help="Default: 502")
+parser.add_argument("unit_id", nargs="?", type=int, default=3, help="Default: 3")
 args = parser.parse_args()
 print(f"Connecting to IP: {args.ip_address}")
+print(f"Port: {args.port}")
+print(f"Unit id: {args.unit_id}")
 print("")
 
 def get_modbus_value(modbus_id, print_str, unit="", divider=1, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
@@ -19,7 +24,7 @@ def get_modbus_value(modbus_id, print_str, unit="", divider=1, data_len=2, byteo
         print(print_str, round(value / divider, 2), unit)
     return value
 
-client = ModbusClient(args.ip_address, 502, 3)
+client = ModbusClient(str(args.ip_address), args.port, args.unit_id)
 client.open()
 
 if client.is_open:
