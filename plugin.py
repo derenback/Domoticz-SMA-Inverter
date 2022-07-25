@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.3" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.4" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -31,10 +31,11 @@ Requirements:
 </plugin>
 """
 
+import Domoticz
 from pyModbusTCP.client import ModbusClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
-import Domoticz
+import traceback
 
 class device_info:
   def __init__(self, address, unit, divisor, decimals, nan, name, type, option = ""):
@@ -54,6 +55,7 @@ S32 = 0x80000000
 
 devs = []
 last_saved_total_prod = 0
+connection_has_failed = False
 
 def get_modbus_value(modbus_address, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
     valueread = client.read_holding_registers(modbus_address, data_len)
@@ -117,16 +119,16 @@ def onStart():
             else:
                 Domoticz.Device(Name=dev.name, Unit=dev.unit, TypeName=dev.type, Used=1).Create()
 
+    Domoticz.Heartbeat(int(Parameters["Mode2"]))
+
     try:
         global client
         client = ModbusClient(host=Parameters["Address"], port = int(Parameters["Port"]), unit_id=int(Parameters["Mode1"]))
         client.open()
+        Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(SERIAL_NUMBER_ADDRESS)))        
     except:
-        Domoticz.Log("SMA Inverter connection problem")
-
-    Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(SERIAL_NUMBER_ADDRESS)))
-
-    Domoticz.Heartbeat(int(Parameters["Mode2"]))
+        Domoticz.Log("SMA failed to connect to inverter")
+        Domoticz.Log(traceback.print_exc())
 
 def update_device(dev):
     global last_saved_total_prod
@@ -159,13 +161,22 @@ def update_device(dev):
 
 
 def onHeartbeat():
-    if not client.is_open:
+    global connection_has_failed
+    if not client.is_open or connection_has_failed:
         Domoticz.Log("SMA inverter not connected. Reconnecting...")
         try:
+            connection_has_failed = False
+            client.close()
             client.open()
         except:
-            Domoticz.Log("SMA Inverter connection problem");
-            return
+            Domoticz.Log("SMA failed to connect to inverter")
+            Domoticz.Log(traceback.print_exc())
+    else:
+        try:
+            for dev in devs:
+                update_device(dev)
+        except:
+            connection_has_failed = True
+            Domoticz.Log("SMA Failed to read data")
+            Domoticz.Log(traceback.print_exc())
 
-    for dev in devs:
-        update_device(dev)

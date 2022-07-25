@@ -59,6 +59,7 @@ In the folder test you will find a simple stand alone test script.
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.9.4 Improve ability to recover connection on socket failure
     0.9.3 Fix check if client is open and make sure port and unit number are integers
     0.9.2 Fix Handle negative numbers
     0.9.1 Added String Current and Voltage sensors
