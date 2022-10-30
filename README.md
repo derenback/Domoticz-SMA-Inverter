@@ -29,7 +29,7 @@ In the folder test you will find a simple stand alone test script.
 
 ## Tested on
 - Domoticz versions: 2020.2, 2021.1, 2022.1
-- Sunny Tripower 10, STP10.0-3AV-40 601
+- Sunny Tripower 10, STP10.0-3AV-40 601 FW 3.10.15.R and 3.11.11.R
 
 ## Modbus parameters used and sensor types
     
