@@ -23,12 +23,21 @@ sudo systemctl restart domoticz
 ## Docker
 Docker example files added in the folder docker. 
 Note that you might have to modify these files to fit your system.
+To update to new docker vesion:
+```bash
+cd ~/domoticz/plugins/Domoticz-SMA-Inverter/docker
+sudo docker pull domoticz/domoticz
+sudo docker build . -t domoticz-sma
+# cd {folder_used_to_run_your_docker_files} e.g. /opt/domoticz
+sudo docker-compose down
+sudo docker-compose up -d
+```
 
 ## Test file
 In the folder test you will find a simple stand alone test script.
 
 ## Tested on
-- Domoticz versions: 2020.2, 2021.1, 2022.1
+- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2
 - Sunny Tripower 10, STP10.0-3AV-40 601 FW 3.10.15.R and 3.11.11.R
 
 ## Modbus parameters used and sensor types
