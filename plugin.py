@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.5" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.6" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -70,7 +70,7 @@ def onStart():
     global last_saved_total_prod
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
 
-    devs.append(    device_info(30529,  1,    1, 1, U32, "Solar Production", 0x71)) 
+    devs.append(    device_info(30529,  1,    1, 1, U32, "Solar Production", "0x71")) 
     devs.append(    device_info(30773,  2,    1, 1, S32, "DC Power A",       "Usage"))
     devs.append(    device_info(30961,  3,    1, 1, S32, "DC Power B",       "Usage"))
     devs.append(    device_info(30775,  4,    1, 1, S32, "AC Power",         "kWh"))
@@ -111,11 +111,11 @@ def onStart():
 
     for dev in devs:
         if dev.unit not in Devices:
-            if dev.type == 0x71:
+            if dev.device_type == "0x71":
                 Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=0x71,Subtype=0x0,Used=1).Create()
-            elif dev.type == "Custom":
-                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=31,Options=dev.option,Used=1).Create() 
-            elif dev.type == "Ampere":
+            elif dev.device_type == "Custom":
+                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=31,Options=dev.options,Used=1).Create() 
+            elif dev.device_type == "Ampere":
                 Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=23,Used=1).Create() 
             else:
                 Domoticz.Device(Name=dev.name, Unit=dev.unit, TypeName=dev.device_type, Used=1).Create()

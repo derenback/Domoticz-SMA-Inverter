@@ -8,7 +8,7 @@
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
-pip3 install -U pymodbus pymodbusTCP
+sudo pip3 install -U pymodbus pymodbusTCP
 sudo systemctl restart domoticz
 ```
 - Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added when adding the Hardware in domoticz.
@@ -68,6 +68,7 @@ In the folder test you will find a simple stand alone test script.
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.9.6 Bugfix for issue #19
     0.9.5 Code cleanup
     0.9.4 Improve ability to recover connection on socket failure
     0.9.3 Fix check if client is open and make sure port and unit number are integers
