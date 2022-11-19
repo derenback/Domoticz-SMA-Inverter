@@ -68,7 +68,8 @@ In the folder test you will find a simple stand alone test script.
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
-    0.9.6 Bugfix for issue #19
+    0.9.7 Bugfix #21 Added support for inteval longer than 60 seconds
+    0.9.6 Bugfix #19 Issue after refactor to use dataclass
     0.9.5 Code cleanup
     0.9.4 Improve ability to recover connection on socket failure
     0.9.3 Fix check if client is open and make sure port and unit number are integers
