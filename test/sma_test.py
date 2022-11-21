@@ -61,7 +61,7 @@ if client.is_open:
     get_modbus_value(30785, "Grid voltage phase L2", "V", 100)
     get_modbus_value(30787, "Grid voltage phase L3", "V", 100)
     print(" ")
-    get_modbus_value(30795, "Grig Current", "A")
+    get_modbus_value(30795, "Grid Current", "A")
 
     client.close()
 
