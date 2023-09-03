@@ -39,6 +39,8 @@ In the folder test you will find a simple stand alone test script.
 ## Tested on
 - Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2
 - Sunny Tripower 10, STP10.0-3AV-40 601 FW 3.10.15.R and 3.11.11.R
+- pymodbus 2.4.0, 2.5.0, 3.5.0
+- pyModbusTCP 0.1.8, 0.2.0 
 
 ## Modbus parameters used and sensor types
     
@@ -68,6 +70,8 @@ In the folder test you will find a simple stand alone test script.
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
+    0.9.8 Fix for breaking change in pymodbus constants.
+          https://github.com/pymodbus-dev/pymodbus/pull/1743
     0.9.7 Bugfix #21 Added support for inteval longer than 60 seconds
     0.9.6 Bugfix #19 Issue after refactor to use dataclass
     0.9.5 Code cleanup

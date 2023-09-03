@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.7" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="0.9.8" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -38,6 +38,12 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import traceback
 
+# Fix for breaking change in pymodbus constants
+if hasattr(Endian, 'BIG'):
+    ENDIAN_BIG = Endian.BIG
+else:
+    ENDIAN_BIG = Endian.Big
+
 @dataclass
 class device_info:
   address: int
@@ -60,7 +66,7 @@ connection_has_failed = False
 heartbeat = 5
 heartbeat_count = 0
 
-def get_modbus_value(modbus_address, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
+def get_modbus_value(modbus_address, data_len=2, byteorder=ENDIAN_BIG, wordorder=ENDIAN_BIG):
     valueread = client.read_holding_registers(modbus_address, data_len)
     value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
     if (Parameters["Mode4"] == "Debug"):
