@@ -5,6 +5,8 @@
 - Modbus TCP and UDP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
 
 ## Installation
+Note! On later versions of Pi OS (2023.10) you will probably get an error that say "error: externally-managed-environment". Checkout Jeff Geerlings post [here](https://www.jeffgeerling.com/blog/2023/how-solve-error-externally-managed-environment-when-installing-pip3) on one way to solve this.
+
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
