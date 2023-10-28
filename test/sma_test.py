@@ -6,10 +6,7 @@ from pymodbus.payload import BinaryPayloadDecoder
 import argparse
 
 # Fix for breaking change in pymodbus constants
-if hasattr(Endian, 'BIG'):
-    ENDIAN_BIG = Endian.BIG
-else:
-    ENDIAN_BIG = Endian.Big
+ENDIAN_BIG = Endian.BIG if hasattr(Endian, 'BIG') else Endian.Big
 
 parser = argparse.ArgumentParser(description="Test the connection to your SMA inverter.")
 parser.add_argument("ip_address", nargs="?", type=ip_address, default="192.168.0.125", help="Default: 192.168.0.125")

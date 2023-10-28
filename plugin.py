@@ -39,10 +39,7 @@ from pymodbus.payload import BinaryPayloadDecoder
 import traceback
 
 # Fix for breaking change in pymodbus constants
-if hasattr(Endian, 'BIG'):
-    ENDIAN_BIG = Endian.BIG
-else:
-    ENDIAN_BIG = Endian.Big
+ENDIAN_BIG = Endian.BIG if hasattr(Endian, 'BIG') else Endian.Big
 
 @dataclass
 class device_info:
