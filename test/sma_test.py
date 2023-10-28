@@ -5,6 +5,12 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import argparse
 
+# Fix for breaking change in pymodbus constants
+if hasattr(Endian, 'BIG'):
+    ENDIAN_BIG = Endian.BIG
+else:
+    ENDIAN_BIG = Endian.Big
+
 parser = argparse.ArgumentParser(description="Test the connection to your SMA inverter.")
 parser.add_argument("ip_address", nargs="?", type=ip_address, default="192.168.0.125", help="Default: 192.168.0.125")
 parser.add_argument("port", nargs="?", type=int, default=502, help="Default: 502")
@@ -15,7 +21,7 @@ print(f"Port: {args.port}")
 print(f"Unit id: {args.unit_id}")
 print("")
 
-def get_modbus_value(modbus_id, print_str, unit="", divider=1, data_len=2, byteorder=Endian.Big, wordorder=Endian.Big):
+def get_modbus_value(modbus_id, print_str, unit="", divider=1, data_len=2, byteorder=ENDIAN_BIG, wordorder=ENDIAN_BIG):
     valueread = client.read_holding_registers(modbus_id, data_len)
     value = BinaryPayloadDecoder.fromRegisters(valueread, byteorder, wordorder).decode_32bit_uint()
     if divider == 1:
