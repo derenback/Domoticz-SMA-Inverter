@@ -39,10 +39,11 @@ sudo docker-compose up -d
 In the folder test you will find a simple stand alone test script.
 
 ## Tested on
-- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2
-- Sunny Tripower 10, STP10.0-3AV-40 601 FW 3.10.15.R and 3.11.11.R
-- pymodbus 2.4.0, 2.5.0, 3.5.0, 3.5.4
-- pyModbusTCP 0.1.8, 0.2.0 
+- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.2
+- Sunny Tripower 10, STP10.0-3AV-40 601 
+      FW 3.10.15.R, 3.11.11.R, 4.0.61.R
+- pymodbus: 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3
+- pyModbusTCP: 0.1.8, 0.2.0, 0.2.1
 
 ## Modbus parameters used and sensor types
     
