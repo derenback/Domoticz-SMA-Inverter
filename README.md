@@ -23,23 +23,13 @@ sudo systemctl restart domoticz
 ```
 
 ## Docker
-Docker example files added in the folder docker. 
-Note that you might have to modify these files to fit your system.
-To update to new docker vesion:
-```bash
-cd ~/domoticz/plugins/Domoticz-SMA-Inverter/docker
-sudo docker pull domoticz/domoticz
-sudo docker build . -t domoticz-sma
-# cd {folder_used_to_run_your_docker_files} e.g. /opt/domoticz
-sudo docker-compose down
-sudo docker-compose up -d
-```
+See docker example files [here](https://github.com/derenback/Domoticz-SMA-Inverter-Docker)
 
 ## Test file
 In the folder test you will find a simple stand alone test script.
 
 ## Tested on
-- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.2
+- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7
 - Sunny Tripower 10, STP10.0-3AV-40 601 
       FW 3.10.15.R, 3.11.11.R, 4.0.61.R
 - pymodbus: 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3
@@ -73,10 +63,10 @@ In the folder test you will find a simple stand alone test script.
 |  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
 
 ## Version history
-    0.9.9 Fix for breaking change in pymodbus constants
+    1.0.0 Move docker files to a separate [repo](https://github.com/derenback/Domoticz-SMA-Inverter-Docker)
+    0.9.9 Fix for breaking change in [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743).
           Now also in test script.
-    0.9.8 Fix for breaking change in pymodbus constants.
-          https://github.com/pymodbus-dev/pymodbus/pull/1743
+    0.9.8 Fix for breaking change in [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743).
     0.9.7 Bugfix #21 Added support for inteval longer than 60 seconds
     0.9.6 Bugfix #19 Issue after refactor to use dataclass
     0.9.5 Code cleanup
