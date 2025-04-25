@@ -9,7 +9,7 @@ Requirements:
 
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.0.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.1.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -25,6 +25,12 @@ Requirements:
             <options>
                 <option label="On" value="Debug"/>
                 <option label="Off" value="Off" default="true" />
+            </options>
+        </param>
+        <param field="Mode5" label="Battery sensors" width="75px">
+            <options>
+                <option label="On" value="On"/>
+                <option label="Off" value="Off" default="true"/>
             </options>
         </param>
     </params>
@@ -74,12 +80,14 @@ def onStart():
     global devs, last_saved_total_prod, heartbeat
     Domoticz.Log("Domoticz SMA Inverter Modbus plugin start")
 
-    devs.append(    device_info(30529,  1,    1, 1, U32, "Solar Production", "0x71")) 
+    devs.append(    device_info(30529,  1,    1, 1, U32, "Solar Production", "0x71"))
     devs.append(    device_info(30773,  2,    1, 1, S32, "DC Power A",       "Usage"))
     devs.append(    device_info(30961,  3,    1, 1, S32, "DC Power B",       "Usage"))
     devs.append(    device_info(30775,  4,    1, 1, S32, "AC Power",         "kWh"))
     devs.append(    device_info(30953,  5,   10, 1, S32, "Temperature",      "Temperature"))
+    
     if (Parameters["Mode3"] == "On"):
+        Domoticz.Log("Extended sensors On")
         devs.append(device_info(30777,  6,    1, 1, S32, "Power L1",          "Usage"))
         devs.append(device_info(30779,  7,    1, 1, S32, "Power L2",          "Usage"))
         devs.append(device_info(30781,  8,    1, 1, S32, "Power L3",          "Usage"))
@@ -97,30 +105,38 @@ def onStart():
         devs.append(device_info(30957, 20, 1000, 3, S32, "Current String B",  "Ampere"))
         devs.append(device_info(30771, 21,  100, 0, S32, "Voltage String A",  "Voltage"))
         devs.append(device_info(30959, 22,  100, 0, S32, "Voltage String B",  "Voltage"))
-
-    if (Parameters["Mode3"] == "On"):
-        Domoticz.Log("Extended sensors On")
     else:
         Domoticz.Log("Extended sensors Off")
-    
+
     if (Parameters["Mode4"] == "Debug"):
         Domoticz.Log("SMA Debug is On")
         Domoticz.Log("SMA Heartbeat time: " + Parameters["Mode2"])
 
-    if 4 in Devices:       
+    if (Parameters["Mode5"] == "On"):
+        Domoticz.Log("Battery sensors On")
+        devs.append(device_info(30849, 23,   10, 1, S32, "Battery Temperature", "Temperature"))
+        devs.append(device_info(30845, 24,    1, 1, S32, "Battery State of Charge", "Percentage"))
+        devs.append(device_info(30867, 25,    1, 1, S32, "Battery Grid Feed-In Power", "kWh")) 
+        devs.append(device_info(30865, 26,    1, 1, S32, "Battery Grid Supplied Power", "kWh"))
+    else:
+        Domoticz.Log("Battery sensors Off")
+
+    if 4 in Devices:
         temp_str = Devices[4].sValue.split(";")
         last_saved_total_prod = int(float(temp_str[1]))
         if (Parameters["Mode4"] == "Debug"):
-            Domoticz.Log("SMA restored total production on restart " + str(last_saved_total_prod)) 
-
+            Domoticz.Log("SMA restored total production on restart " + str(last_saved_total_prod))
+    
     for dev in devs:
         if dev.unit not in Devices:
             if dev.device_type == "0x71":
                 Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=0x71,Subtype=0x0,Used=1).Create()
             elif dev.device_type == "Custom":
-                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=31,Options=dev.options,Used=1).Create() 
+                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=31,Options=dev.options,Used=1).Create()
             elif dev.device_type == "Ampere":
-                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=23,Used=1).Create() 
+                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=23,Used=1).Create()
+            elif dev.device_type == "Percentage":
+                Domoticz.Device(Name=dev.name, Unit=dev.unit,Type=243,Subtype=6,Used=1).Create()
             else:
                 Domoticz.Device(Name=dev.name, Unit=dev.unit, TypeName=dev.device_type, Used=1).Create()
 
@@ -131,7 +147,7 @@ def onStart():
         global client
         client = ModbusClient(host=Parameters["Address"], port = int(Parameters["Port"]), unit_id=int(Parameters["Mode1"]))
         client.open()
-        Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(SERIAL_NUMBER_ADDRESS)))        
+        Domoticz.Log("SMA Inverter serial number: " + str(get_modbus_value(SERIAL_NUMBER_ADDRESS)))
     except:
         Domoticz.Log("SMA failed to connect to inverter")
         Domoticz.Log(traceback.print_exc())
@@ -149,12 +165,12 @@ def update_device(dev):
         else:
             if value == dev.nan:
                 value = 0
-        
+
         # Handle negative numbers
         if dev.nan == S32:
             if value > S32:
                 value = value - (U32 + 1)
-        
+
         if dev.divisor == 1:
             if dev.unit == 4:
                 if (Parameters["Mode4"] == "Debug"):
@@ -189,5 +205,3 @@ def onHeartbeat():
                 connection_has_failed = True
                 Domoticz.Log("SMA Failed to read data")
                 Domoticz.Log(traceback.print_exc())
-
-

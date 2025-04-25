@@ -29,7 +29,7 @@ See docker example files [here](https://github.com/derenback/Domoticz-SMA-Invert
 In the folder test you will find a simple stand alone test script.
 
 ## Tested on
-- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7
+- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7, 2025.2
 - Sunny Tripower 10, STP10.0-3AV-40 601 
       FW 3.10.15.R, 3.11.11.R, 4.0.61.R
 - pymodbus: 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3
@@ -37,32 +37,40 @@ In the folder test you will find a simple stand alone test script.
 
 ## Modbus parameters used and sensor types
     
-| Address | Name              | Unit | Ext | Sensor Type | Note                             |
-|---------|-------------------|------|-----|-------------|----------------------------------|
-|  30529  | Solar production  | kWh  |     | Counter     |                                  | 
-|  30773  | DC Power A        |  W   |     | Usage       |                                  |
-|  30961  | DC Power B        |  W   |     | Usage       |                                  |
-|  30775  | AC Power          |  W   |     | kWh         | + 30529 for daily and total prod |
-|  30953  | Temperature       |  C   |     | Temperatur  |                                  |
-|  30777  | Power L1          |  W   |  X  | Usage       |                                  |
-|  30779  | Power L2          |  W   |  X  | Usage       |                                  |
-|  30781  | Power L3          |  W   |  X  | Usage       |                                  |
-|  30783  | Voltage L1        |  V   |  X  | Voltage     |                                  |
-|  30785  | Voltage L2        |  V   |  X  | Voltage     |                                  |
-|  30787  | Voltage L3        |  V   |  X  | Voltage     |                                  |
-|  30803  | Grid frequency    |  Hz  |  X  | Custom      |                                  |
-|  30807  | Reactive power L1 |  VAr |  X  | Custom      |                                  |
-|  30809  | Reactive power L2 |  VAr |  X  | Custom      |                                  |
-|  30811  | Reactive power L3 |  VAr |  X  | Custom      |                                  |
-|  30813  | Apparent power L1 |  VA  |  X  | Custom      |                                  |
-|  30815  | Apparent power L2 |  VA  |  X  | Custom      |                                  |
-|  30817  | Apparent power L3 |  VA  |  X  | Custom      |                                  |
-|  30769  | Current String A  |  A   |  X  | Ampere      |                                  |
-|  30957  | Current String B  |  A   |  X  | Ampere      |                                  |
-|  30771  | Voltage String A  |  V   |  X  | Voltage     |                                  |
-|  30959  | Voltage String B  |  V   |  X  | Voltage     |                                  |
+| Address | Name                       | Unit | Ext | Sensor Type | Note                             |
+|---------|----------------------------|------|-----|-------------|----------------------------------|
+|  30529  | Solar production           |  kWh |     | Counter     |                                  | 
+|  30773  | DC Power A                 |  W   |     | Usage       |                                  |
+|  30961  | DC Power B                 |  W   |     | Usage       |                                  |
+|  30775  | AC Power                   |  W   |     | kWh         | + 30529 for daily and total prod |
+|  30953  | Temperature                |  C   |     | Temperature |                                  |
+|  30777  | Power L1                   |  W   |  E  | Usage       |                                  |
+|  30779  | Power L2                   |  W   |  E  | Usage       |                                  |
+|  30781  | Power L3                   |  W   |  E  | Usage       |                                  |
+|  30783  | Voltage L1                 |  V   |  E  | Voltage     |                                  |
+|  30785  | Voltage L2                 |  V   |  E  | Voltage     |                                  |
+|  30787  | Voltage L3                 |  V   |  E  | Voltage     |                                  |
+|  30803  | Grid frequency             |  Hz  |  E  | Custom      |                                  |
+|  30807  | Reactive power L1          |  VAr |  E  | Custom      |                                  |
+|  30809  | Reactive power L2          |  VAr |  E  | Custom      |                                  |
+|  30811  | Reactive power L3          |  VAr |  E  | Custom      |                                  |
+|  30813  | Apparent power L1          |  VA  |  E  | Custom      |                                  |
+|  30815  | Apparent power L2          |  VA  |  E  | Custom      |                                  |
+|  30817  | Apparent power L3          |  VA  |  E  | Custom      |                                  |
+|  30769  | Current String A           |  A   |  E  | Ampere      |                                  |
+|  30957  | Current String B           |  A   |  E  | Ampere      |                                  |
+|  30771  | Voltage String A           |  V   |  E  | Voltage     |                                  |
+|  30959  | Voltage String B           |  V   |  E  | Voltage     |                                  |
+|  30849  | Battery Temp               |  C   |  B  | Temperature |                                  |
+|  30845  | Battery Charge             |  %   |  B  | Percentage  |                                  |
+|  30867  | Battery Grid Feed-In Power |  kWh |  B  | kWh         |                                  |
+|  30865  | Battery Grid Supplied Power|  kWh |  B  | kWh         |                                  |
+
+E = Extended sensors (optional)  
+B = Battery sensors (optional)
 
 ## Version history
+    1.1.0 Added Battery temperature and charge sensors (Thanks to daserra23)
     1.0.0 Move docker files to a separate [repo](https://github.com/derenback/Domoticz-SMA-Inverter-Docker)
     0.9.9 Fix for breaking change in [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743).
           Now also in test script.
