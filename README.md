@@ -1,11 +1,33 @@
-# Domoticz plugin for SMA Inverters using Modbus TCP/IP
+# Domoticz SMA Inverter Plugin
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
+A [Domoticz](https://www.domoticz.com/) plugin for monitoring SMA solar inverters via Modbus TCP/IP.
+
+## Features
+
+- Real-time solar production monitoring
+- AC/DC power readings
+- Temperature monitoring
+- Optional extended sensors (per-phase voltage, power, grid frequency)
+- Optional battery sensors (state of charge, temperature, grid feed-in)
+- Automatic reconnection on connection failure
+
+---
 
 ## Requirements
-- Modbus TCP and UDP enabled ([check this](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
+
+- **Domoticz** 2020.2 or later
+- **Python** 3.8+
+- **pymodbus** and **pyModbusTCP** packages
+- SMA inverter with **Modbus TCP enabled** ([how to check](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
+
+---
 
 ## Installation
-Note! On later versions of Pi OS (2023.10) you will probably get an error that say "error: externally-managed-environment". Checkout Jeff Geerlings post [here](https://www.jeffgeerling.com/blog/2023/how-solve-error-externally-managed-environment-when-installing-pip3) on one way to solve this.
+
+> **Note:** On recent Raspberry Pi OS versions (2023.10+), you may encounter an `externally-managed-environment` error. See [this guide](https://www.jeffgeerling.com/blog/2023/how-solve-error-externally-managed-environment-when-installing-pip3) for solutions.
 
 ```bash
 cd ~/domoticz/plugins
@@ -13,97 +35,153 @@ git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
 sudo pip3 install -U pymodbus pymodbusTCP
 sudo systemctl restart domoticz
 ```
-- Make sure to have the setting "Accept new Hardware Devices" turned on for new devices to be added when adding the Hardware in domoticz.
 
-## Update
+> **Important:** Enable **"Accept new Hardware Devices"** in Domoticz settings before adding the hardware.
+
+---
+
+## Updating
+
 ```bash
 cd ~/domoticz/plugins/Domoticz-SMA-Inverter
 git pull
 sudo systemctl restart domoticz
 ```
 
+---
+
+## Configuration
+
+After installation, add the hardware in Domoticz:
+
+1. Go to **Setup → Hardware**
+2. Select **SMA Solar Inverter (modbus TCP/IP)**
+3. Configure:
+   - **IP Address**: Your inverter's IP
+   - **Port**: `502` (default Modbus port)
+   - **Device ID**: Usually `3`
+   - **Reading Interval**: Polling frequency in seconds
+   - **Extended sensors**: Enable for per-phase readings
+   - **Battery sensors**: Enable for battery monitoring
+
+---
+
 ## Docker
-See docker example files [here](https://github.com/derenback/Domoticz-SMA-Inverter-Docker)
 
-## Test file
-In the folder test you will find a simple stand alone test script.
+See the [Docker setup repository](https://github.com/derenback/Domoticz-SMA-Inverter-Docker) for containerized deployment.
 
-## Tested on
-- Domoticz versions: 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7, 2025.2
-- Sunny Tripower 10, STP10.0-3AV-40 601 
-      FW 3.10.15.R, 3.11.11.R, 4.0.61.R
-- pymodbus: 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3
-- pyModbusTCP: 0.1.8, 0.2.0, 0.2.1
+---
 
-## Modbus parameters used and sensor types
-    
-| Address | Name                       | Unit | Ext | Sensor Type | Note                             |
-|---------|----------------------------|------|-----|-------------|----------------------------------|
-|  30529  | Solar production           |  kWh |     | Counter     |                                  | 
-|  30773  | DC Power A                 |  W   |     | Usage       |                                  |
-|  30961  | DC Power B                 |  W   |     | Usage       |                                  |
-|  30775  | AC Power                   |  W   |     | kWh         | + 30529 for daily and total prod |
-|  30953  | Temperature                |  C   |     | Temperature |                                  |
-|  30777  | Power L1                   |  W   |  E  | Usage       |                                  |
-|  30779  | Power L2                   |  W   |  E  | Usage       |                                  |
-|  30781  | Power L3                   |  W   |  E  | Usage       |                                  |
-|  30783  | Voltage L1                 |  V   |  E  | Voltage     |                                  |
-|  30785  | Voltage L2                 |  V   |  E  | Voltage     |                                  |
-|  30787  | Voltage L3                 |  V   |  E  | Voltage     |                                  |
-|  30803  | Grid frequency             |  Hz  |  E  | Custom      |                                  |
-|  30807  | Reactive power L1          |  VAr |  E  | Custom      |                                  |
-|  30809  | Reactive power L2          |  VAr |  E  | Custom      |                                  |
-|  30811  | Reactive power L3          |  VAr |  E  | Custom      |                                  |
-|  30813  | Apparent power L1          |  VA  |  E  | Custom      |                                  |
-|  30815  | Apparent power L2          |  VA  |  E  | Custom      |                                  |
-|  30817  | Apparent power L3          |  VA  |  E  | Custom      |                                  |
-|  30769  | Current String A           |  A   |  E  | Ampere      |                                  |
-|  30957  | Current String B           |  A   |  E  | Ampere      |                                  |
-|  30771  | Voltage String A           |  V   |  E  | Voltage     |                                  |
-|  30959  | Voltage String B           |  V   |  E  | Voltage     |                                  |
-|  30849  | Battery Temp               |  C   |  B  | Temperature |                                  |
-|  30845  | Battery Charge             |  %   |  B  | Percentage  |                                  |
-|  30867  | Battery Grid Feed-In Power |  kWh |  B  | kWh         |                                  |
-|  30865  | Battery Grid Supplied Power|  kWh |  B  | kWh         |                                  |
+## Testing
 
-E = Extended sensors (optional)  
-B = Battery sensors (optional)
+A standalone test script is available in the `test/` folder to verify connectivity:
 
-## Version history
-    1.1.0 Added Battery temperature and charge sensors (Thanks to daserra23)
-    1.0.0 Move docker files to a separate [repo](https://github.com/derenback/Domoticz-SMA-Inverter-Docker)
-    0.9.9 Fix for breaking change in [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743).
-          Now also in test script.
-    0.9.8 Fix for breaking change in [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743).
-    0.9.7 Bugfix #21 Added support for inteval longer than 60 seconds
-    0.9.6 Bugfix #19 Issue after refactor to use dataclass
-    0.9.5 Code cleanup
-    0.9.4 Improve ability to recover connection on socket failure
-    0.9.3 Fix check if client is open and make sure port and unit number are integers
-    0.9.2 Fix Handle negative numbers
-    0.9.1 Added String Current and Voltage sensors
-    0.9.0 Refactor and cleanup
-    0.8.0 Added Reactive and apparent power sensors
-    0.7.4 Fix for decimal value stored for total production
-    0.7.3 Code cleanup, Fix issue with U32 vs S32 and undefined value
-    0.7.2 Fix so that total production is not set to zero on undefind value
-    0.7.1 Skip update if a device has been removed
-    0.7.0 Added grid frquency
-    0.6.0 Reverted removal of total production and restore total production on restart or no data.
-    0.5.1 Fix for undefined value of total production
-    0.5.0 AC power daily production based on total production + Removed device for Solar production. 
-          (Now included in AC power)
-    0.4.0 Changed AC Power to be sensor type kWh to also show daily production
-    0.3.5 Added debug information and option
-    0.3.4 Read serial number on start
-    0.3.3 Made phase power and voltage optional (Extended sensors)
-    0.3.2 Removed decimals on voltage reading
-    0.3.1 Fixed voltage divisor
-    0.3.0 Added phase voltage and power sensors
-    0.2.0 Reduced code duplication
-    0.1.0 Initial version
+```bash
+cd test
+python3 sma_test.py
+```
 
-## Thanks
+---
 
-Original author: [(Want100Cookies)](https://github.com/Want100Cookies/Domoticz-SMA-Inverter)
+## Compatibility
+
+### Tested Environments
+
+| Component    | Versions                                        |
+|--------------|-------------------------------------------------|
+| Domoticz     | 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7, 2025.2 |
+| Inverter     | Sunny Tripower 10 (STP10.0-3AV-40 601)          |
+| Firmware     | 3.10.15.R, 3.11.11.R, 4.0.61.R                  |
+| pymodbus     | 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3               |
+| pyModbusTCP  | 0.1.8, 0.2.0, 0.2.1                             |
+
+---
+
+## Supported Sensors
+
+### Core Sensors (always enabled)
+
+| Address | Name             | Unit | Sensor Type | Note                             |
+|---------|------------------|------|-------------|----------------------------------|
+| 30529   | Solar Production | kWh  | Counter     |                                  |
+| 30773   | DC Power A       | W    | Usage       |                                  |
+| 30961   | DC Power B       | W    | Usage       |                                  |
+| 30775   | AC Power         | W    | kWh         | + 30529 for daily and total prod |
+| 30953   | Temperature      | °C   | Temperature |                                  |
+
+### Extended Sensors (optional)
+
+| Address | Name              | Unit | Sensor Type |
+|---------|-------------------|------|-------------|
+| 30777   | Power L1          | W    | Usage       |
+| 30779   | Power L2          | W    | Usage       |
+| 30781   | Power L3          | W    | Usage       |
+| 30783   | Voltage L1        | V    | Voltage     |
+| 30785   | Voltage L2        | V    | Voltage     |
+| 30787   | Voltage L3        | V    | Voltage     |
+| 30803   | Grid Frequency    | Hz   | Custom      |
+| 30807   | Reactive Power L1 | VAr  | Custom      |
+| 30809   | Reactive Power L2 | VAr  | Custom      |
+| 30811   | Reactive Power L3 | VAr  | Custom      |
+| 30813   | Apparent Power L1 | VA   | Custom      |
+| 30815   | Apparent Power L2 | VA   | Custom      |
+| 30817   | Apparent Power L3 | VA   | Custom      |
+| 30769   | Current String A  | A    | Ampere      |
+| 30957   | Current String B  | A    | Ampere      |
+| 30771   | Voltage String A  | V    | Voltage     |
+| 30959   | Voltage String B  | V    | Voltage     |
+
+### Battery Sensors (optional)
+
+| Address | Name                      | Unit | Sensor Type |
+|---------|---------------------------|------|-------------|
+| 30849   | Battery Temperature       | °C   | Temperature |
+| 30845   | Battery State of Charge   | %    | Percentage  |
+| 30867   | Battery Grid Feed-In      | kWh  | kWh         |
+| 30865   | Battery Grid Supplied     | kWh  | kWh         |
+
+---
+
+## Changelog
+
+<details>
+<summary>Click to expand version history</summary>
+
+| Version | Changes |
+|---------|---------|
+| 1.2.0   | Refactor plugin code |
+| 1.1.0   | Added battery temperature and charge sensors (thanks @daserra23) |
+| 1.0.0   | Moved Docker files to [separate repo](https://github.com/derenback/Domoticz-SMA-Inverter-Docker) |
+| 0.9.9   | Fix for pymodbus constants breaking change (test script) |
+| 0.9.8   | Fix for [pymodbus constants](https://github.com/pymodbus-dev/pymodbus/pull/1743) breaking change |
+| 0.9.7   | Bugfix: support intervals longer than 60 seconds (#21) |
+| 0.9.6   | Bugfix: issue after dataclass refactor (#19) |
+| 0.9.5   | Code cleanup |
+| 0.9.4   | Improved connection recovery on socket failure |
+| 0.9.3   | Fix client open check; ensure port/unit are integers |
+| 0.9.2   | Handle negative numbers correctly |
+| 0.9.1   | Added string current and voltage sensors |
+| 0.9.0   | Refactor and cleanup |
+| 0.8.0   | Added reactive and apparent power sensors |
+| 0.7.x   | Various fixes for production tracking and values |
+| 0.6.0   | Restore total production on restart |
+| 0.5.x   | AC power daily production improvements |
+| 0.4.0   | AC Power sensor type changed to kWh |
+| 0.3.x   | Added phase voltage/power, debug option |
+| 0.2.0   | Reduced code duplication |
+| 0.1.0   | Initial version |
+
+</details>
+
+---
+
+## Acknowledgments
+
+Original author: [Want100Cookies](https://github.com/Want100Cookies/Domoticz-SMA-Inverter)
+
+---
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
