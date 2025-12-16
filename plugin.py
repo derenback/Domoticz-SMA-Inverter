@@ -6,10 +6,10 @@ Author: Derenback
 Requirements:
     1. SMA Sunny Tripower or Sunny Boy with Modbus TCP enabled.
     2. Python 3.x
-    3. pip3 install -U pymodbus pymodbusTCP
+    3. pip3 install -U pymodbusTCP
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.2.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.3.0" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -37,27 +37,50 @@ Requirements:
 </plugin>
 """
 
+import struct
 import traceback
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import Domoticz
 from pyModbusTCP.client import ModbusClient
-from pymodbus.constants import Endian
-from pymodbus.payload import BinaryPayloadDecoder
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-
-# Fix for breaking change in pymodbus constants
-ENDIAN_BIG = Endian.BIG if hasattr(Endian, "BIG") else Endian.Big
 
 SERIAL_NUMBER_ADDRESS = 30057
 
 # NaN marker values for Modbus registers
 U32_NAN = 0xFFFFFFFF
 S32_NAN = 0x80000000
+
+
+# ---------------------------------------------------------------------------
+# Register Decoding Utilities
+# ---------------------------------------------------------------------------
+
+
+def decode_u32_from_registers(registers: List[int]) -> int:
+    """
+    Decode a 32-bit unsigned integer from two 16-bit Modbus registers.
+
+    Uses big-endian byte order and big-endian word order (high word first),
+    which is standard for SMA inverters.
+
+    Args:
+        registers: List of two 16-bit register values [high_word, low_word]
+
+    Returns:
+        32-bit unsigned integer value
+    """
+    if registers is None or len(registers) < 2:
+        raise ValueError("Invalid register data: expected 2 registers")
+
+    # Pack as two big-endian unsigned shorts, then unpack as big-endian unsigned int
+    # Word order: high word first (registers[0]), low word second (registers[1])
+    packed = struct.pack(">HH", registers[0], registers[1])
+    return struct.unpack(">I", packed)[0]
 
 
 # ---------------------------------------------------------------------------
@@ -177,17 +200,19 @@ class SMAInverterPlugin:
     # Modbus Communication
     # -----------------------------------------------------------------------
 
-    def read_modbus_value(
-        self,
-        address: int,
-        data_len: int = 2,
-        byteorder: Any = ENDIAN_BIG,
-        wordorder: Any = ENDIAN_BIG,
-    ) -> int:
-        """Read a 32-bit unsigned value from a Modbus register."""
+    def read_modbus_value(self, address: int, data_len: int = 2) -> int:
+        """
+        Read a 32-bit unsigned value from a Modbus register.
+
+        Args:
+            address: The Modbus register address to read from
+            data_len: Number of 16-bit registers to read (default: 2 for 32-bit)
+
+        Returns:
+            32-bit unsigned integer value from the registers
+        """
         registers = self.client.read_holding_registers(address, data_len)
-        decoder = BinaryPayloadDecoder.fromRegisters(registers, byteorder, wordorder)
-        value = decoder.decode_32bit_uint()
+        value = decode_u32_from_registers(registers)
         self.log_debug(f"SMA address: {address} value: {value}")
         return value
 

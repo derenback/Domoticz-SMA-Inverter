@@ -20,7 +20,7 @@ A [Domoticz](https://www.domoticz.com/) plugin for monitoring SMA solar inverter
 
 - **Domoticz** 2020.2 or later
 - **Python** 3.8+
-- **pymodbus** and **pyModbusTCP** packages
+- **pyModbusTCP** package
 - SMA inverter with **Modbus TCP enabled** ([how to check](https://www.sma-sunny.com/en/how-to-test-the-connection-to-your-sma-inverter/))
 
 ---
@@ -32,7 +32,7 @@ A [Domoticz](https://www.domoticz.com/) plugin for monitoring SMA solar inverter
 ```bash
 cd ~/domoticz/plugins
 git clone https://github.com/derenback/Domoticz-SMA-Inverter.git
-sudo pip3 install -U pymodbus pymodbusTCP
+sudo pip3 install -U pymodbusTCP
 sudo systemctl restart domoticz
 ```
 
@@ -92,7 +92,6 @@ python3 sma_test.py
 | Domoticz     | 2020.2, 2021.1, 2022.1, 2022.2, 2023.2, 2024.7, 2025.2 |
 | Inverter     | Sunny Tripower 10 (STP10.0-3AV-40 601)          |
 | Firmware     | 3.10.15.R, 3.11.11.R, 4.0.61.R                  |
-| pymodbus     | 2.4.0, 2.5.0, 3.5.0, 3.5.4, 3.6.3               |
 | pyModbusTCP  | 0.1.8, 0.2.0, 0.2.1                             |
 
 ---
@@ -149,6 +148,7 @@ python3 sma_test.py
 
 | Version | Changes |
 |---------|---------|
+| 1.3.0   | Remove pymodbus dependency; use only pyModbusTCP + standard library |
 | 1.2.0   | Refactor plugin code |
 | 1.1.0   | Added battery temperature and charge sensors (thanks @daserra23) |
 | 1.0.0   | Moved Docker files to [separate repo](https://github.com/derenback/Domoticz-SMA-Inverter-Docker) |
