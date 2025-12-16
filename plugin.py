@@ -21,16 +21,16 @@ Requirements:
                 <option label="Off" value="Off"/>
             </options>
         </param>
-        <param field="Mode4" label="Debug" width="75px">
-            <options>
-                <option label="On" value="Debug"/>
-                <option label="Off" value="Off" default="true" />
-            </options>
-        </param>
         <param field="Mode5" label="Battery sensors" width="75px">
             <options>
                 <option label="On" value="On"/>
                 <option label="Off" value="Off" default="true"/>
+            </options>
+        </param>
+        <param field="Mode4" label="Debug" width="75px">
+            <options>
+                <option label="On" value="Debug"/>
+                <option label="Off" value="Off" default="true" />
             </options>
         </param>
     </params>
