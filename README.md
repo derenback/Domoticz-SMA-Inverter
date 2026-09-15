@@ -148,6 +148,7 @@ python3 sma_test.py
 
 | Version | Changes |
 |---------|---------|
+| 1.3.1   | Make sure connection is properly closed on shutdown and cleanup |
 | 1.3.0   | Remove pymodbus dependency; use only pyModbusTCP + standard library |
 | 1.2.0   | Refactor plugin code |
 | 1.1.0   | Added battery temperature and charge sensors (thanks @daserra23) |

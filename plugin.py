@@ -9,7 +9,7 @@ Requirements:
     3. pip3 install -U pymodbusTCP
 """
 """
-<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.3.0" author="Derenback">
+<plugin key="SMA" name="SMA Solar Inverter (modbus TCP/IP)" version="1.3.1" author="Derenback">
     <params>
         <param field="Address" label="Your SMA IP Address" width="200px" required="true" default="192.168.0.125"/>
         <param field="Port" label="Port" width="40px" required="true" default="502"/>
@@ -229,18 +229,28 @@ class SMAInverterPlugin:
             self.log(f"SMA Inverter serial number: {serial}")
             return True
         except Exception:
+            if self.client:
+                self.client.close()
             self.log_error("SMA failed to connect to inverter")
             return False
 
     def reconnect(self) -> bool:
         """Attempt to reconnect to the inverter."""
         try:
+            if not self.client:
+                self.connection_failed = True
+                self.log("SMA failed to reconnect: no Modbus client")
+                return False
+
+            self.client.close()
+            self.client.open()
+            if not self.client.is_open:
+                raise ConnectionError("Modbus client failed to open")
+
             self.connection_failed = False
-            if self.client:
-                self.client.close()
-                self.client.open()
             return True
         except Exception:
+            self.connection_failed = True
             self.log_error("SMA failed to connect to inverter")
             return False
 
@@ -396,6 +406,18 @@ class SMAInverterPlugin:
             self.connection_failed = True
             self.log_error("SMA Failed to read data")
 
+    def on_stop(self) -> None:
+        """Close the Modbus connection when the plugin stops."""
+        if not self.client:
+            return
+
+        try:
+            self.client.close()
+        except Exception:
+            self.log_error("SMA failed to close connection")
+        finally:
+            self.client = None
+
 
 # ---------------------------------------------------------------------------
 # Plugin Instance & Domoticz Callbacks
@@ -412,3 +434,8 @@ def onStart() -> None:
 def onHeartbeat() -> None:
     """Domoticz callback: periodic heartbeat."""
     _plugin.on_heartbeat()
+
+
+def onStop() -> None:
+    """Domoticz callback: plugin stopped."""
+    _plugin.on_stop()
